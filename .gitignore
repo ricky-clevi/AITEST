@@ -1,0 +1,7 @@
+/hsqldb-data/*.lck
+/hsqldb-data/*.log
+/tomcat-9.0.104/logs/
+/tomcat-9.0.104/temp/
+/tomcat-9.0.104/work/
+/.tools/
+/test/
