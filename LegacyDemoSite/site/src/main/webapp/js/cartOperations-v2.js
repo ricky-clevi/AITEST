@@ -84,6 +84,23 @@ $(function(){
             }
         });
     }
+    
+    // Changes button to Buy More (blue) after first click
+    function showBuyMoreButton(productId) {
+        if (!productId) {
+            return;
+        }
+        var $buttons = $('.productActions' + productId).find('input.addToCart');
+        $buttons = $buttons.add($('#productOptions' + productId).find('input.addToCart'));
+        $buttons.each(function() {
+            var $button = $(this);
+            var buyMoreText = $button.data('buyMoreText');
+            $button.addClass('buy-more');
+            if (buyMoreText) {
+                $button.val(buyMoreText);
+            }
+        });
+    }
 
     // Show the cart in a modal when any link with the class "modalcart" is clicked
     $('body').on('click', 'a.modalcart', function() {
@@ -174,8 +191,8 @@ $(function(){
                             HC.showNotification("Error adding to cart");
                         }
                     } else {
-                        $errorSpan.css('display', 'none'); 
-                        $productOptionsSpan.css('display', 'none'); 
+                        $errorSpan.css('display', 'none');
+                        $productOptionsSpan.css('display', 'none');
                         if (buyMoreAdd) {
                             updateHeaderCart2ItemsCount(data.cart2ItemCount);
                         } else {
@@ -187,7 +204,8 @@ $(function(){
                         } else if (wishlistAdd) {
                             showInCartButton(data.productId, 'wishlist');
                         } else {
-                            showInCartButton(data.productId, 'cart');
+                            // Change button to Buy More (blue) after first click
+                            showBuyMoreButton(data.productId);
                         }
                         
                         if (wishlistAdd) {
