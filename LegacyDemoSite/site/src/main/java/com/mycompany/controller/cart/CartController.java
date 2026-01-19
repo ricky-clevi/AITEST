@@ -67,17 +67,10 @@ public class CartController extends BroadleafCartController {
         try {
             super.add(request, response, model, addToCartItem);
             
-            if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
-                responseMap.put("productId", addToCartItem.getProductId());
-            }
             responseMap.put("productName", catalogService.findProductById(addToCartItem.getProductId()).getName());
             responseMap.put("quantityAdded", addToCartItem.getQuantity());
             responseMap.put("cartItemCount", String.valueOf(CartState.getCart().getItemCount()));
-            if (addToCartItem.getItemAttributes() == null || addToCartItem.getItemAttributes().size() == 0) {
-                // We don't want to return a productId to hide actions for when it is a product that has multiple
-                // product options. The user may want the product in another version of the options as well.
-                responseMap.put("productId", addToCartItem.getProductId());
-            }
+            responseMap.put("productId", addToCartItem.getProductId());
         } catch (AddToCartException e) {
             if (e.getCause() instanceof RequiredAttributeNotProvidedException) {
                 responseMap.put("error", "allOptionsRequired");

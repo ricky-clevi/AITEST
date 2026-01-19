@@ -34,8 +34,8 @@
                 
                 <th:block th:with="checkInventory=*{defaultSku.inventoryType?.type == 'CHECK_QUANTITY'},
                                    availableInventory=${checkInventory ? #object.defaultSku.quantityAvailable != null and #object.defaultSku.quantityAvailable != 0 : true},
-                                   inCart=${cart.containsSku(#object.defaultSku) and #lists.isEmpty(product.productOptions)}">
-                    <blc:form method="POST" th:action="@{/cart/add}">
+                                   inCart=${cart.containsSku(#object.defaultSku)}">
+                    <blc:form method="POST" th:action="@{/cart/add}" th:attr="data-cart2-action=@{/cart2/add}">
                         <div class="product-option-nonjs" th:each="productOption : *{productOptions}" th:object="${productOption}">
                             <div class="form50">
                                 <label th:text="*{label}"></label>
@@ -55,13 +55,11 @@
                         </div>
                         
                         <div th:class="*{'productActions' + id}">
-                            <div class="in_cart" th:classappend="${!inCart}? ' hidden'">
-                                <a class="modalcart big-button gray-button" th:href="@{/cart}">In Cart!</a>
-                            </div>
-                            <div class="add_to_cart" th:classappend="${inCart or !availableInventory}? ' hidden'">
+                            <div class="add_to_cart" th:classappend="${!availableInventory}? ' hidden'">
                                 <input type="hidden" name="productId" th:value="*{id}" />
                                 <input type="hidden" name="quantity" value="1" />
-                                <input type="submit" class="addToCart big red" th:value="#{product.buyNow}"/>
+                                <input type="submit" class="addToCart big red" th:classappend="${inCart}? ' buy-more'" th:value="${inCart} ? #{product.buyMore} : #{product.buyNow}"
+                                       th:attr="data-buy-now-text=#{product.buyNow}, data-buy-more-text=#{product.buyMore}"/>
                             </div>
                             <p class="error" th:if="${param.errorMessage}" th:text="${param.errorMessage[0]}"></p>
                         </div>

@@ -2,6 +2,8 @@
     <div id="header_content">
         <div id="cart_info">
 
+            <blc:named_order orderVar="cart2" orderName="cart2" />
+
             <div th:if="${customer.anonymous}"  th:remove="tag">
 
                 <a class="account" th:href="@{/login}">
@@ -31,6 +33,11 @@
                 <span class="headerCartItemsCount" th:text="${cart.itemCount}" />
                 <span class="headerCartItemsCountWord" th:text="${cart.itemCount == 1} ? #{home.item} :  #{home.items}" />
             </a>
+            <span id="cart2Link" class="cart2Link" th:classappend="${cart2.itemCount == 0}? ' hidden'">
+                &nbsp;|&nbsp;
+                <span th:text="#{home.cart2}">Cart2</span>
+                <span class="headerCart2ItemsCount" th:text="${cart2.itemCount}" />
+            </span>
 
         </div>
 
