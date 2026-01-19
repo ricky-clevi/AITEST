@@ -25,6 +25,15 @@ $(function(){
         $('.headerCartItemsCount').html(newCount);
         $('.headerCartItemsCountWord').html((newCount == 1) ? singularItem: plurarlItem);
     }
+
+    function updateHeaderCart2ItemsCount(newCount) {
+        $('.headerCart2ItemsCount').html(newCount);
+        if (parseInt(newCount, 10) > 0) {
+            $('#cart2Link').removeClass('hidden');
+        } else {
+            $('#cart2Link').addClass('hidden');
+        }
+    }
     
     function updateWithPromo(promo) {
         $('.headerCartItemCount').html();
@@ -33,15 +42,47 @@ $(function(){
     // Hides the add to cart/add to wishlist button and shows the in cart/in wishlist button
     // orderType can either be 'cart' or 'wishlist'
     function showInCartButton(productId, orderType) {
-        $('.productActions' + productId).children('.in_'+orderType).removeClass('hidden');
-        $('.productActions' + productId).children('.add_to_'+orderType).addClass('hidden');
+        if (orderType == 'wishlist') {
+            $('.productActions' + productId).children('.in_'+orderType).removeClass('hidden');
+            $('.productActions' + productId).children('.add_to_'+orderType).addClass('hidden');
+            return;
+        }
+        if (!productId) {
+            return;
+        }
+        var $buttons = $('.productActions' + productId).find('input.addToCart');
+        $buttons = $buttons.add($('#productOptions' + productId).find('input.addToCart'));
+        $buttons.each(function() {
+            var $button = $(this);
+            var buyMoreText = $button.data('buyMoreText');
+            $button.addClass('buy-more');
+            if (buyMoreText) {
+                $button.val(buyMoreText);
+            }
+        });
     }
     
     // Hides the in cart/in wishlist button and shows the add to cart/add to wishlist button
     // orderType can either be 'cart' or 'wishlist'
     function showAddToCartButton(productId, orderType) {
-        $('.productActions' + productId).children('.add_to_'+orderType).removeClass('hidden');
-        $('.productActions' + productId).children('.in_'+orderType).addClass('hidden');
+        if (orderType == 'wishlist') {
+            $('.productActions' + productId).children('.add_to_'+orderType).removeClass('hidden');
+            $('.productActions' + productId).children('.in_'+orderType).addClass('hidden');
+            return;
+        }
+        if (!productId) {
+            return;
+        }
+        var $buttons = $('.productActions' + productId).find('input.addToCart');
+        $buttons = $buttons.add($('#productOptions' + productId).find('input.addToCart'));
+        $buttons.each(function() {
+            var $button = $(this);
+            var buyNowText = $button.data('buyNowText');
+            $button.removeClass('buy-more');
+            if (buyNowText) {
+                $button.val(buyNowText);
+            }
+        });
     }
 
     // Show the cart in a modal when any link with the class "modalcart" is clicked
@@ -77,7 +118,8 @@ $(function(){
         
         var itemRequest = BLC.serializeObject($form),
             modalClick = $button.parents('.simplemodal-wrap').length > 0,
-            wishlistAdd = $button.hasClass('addToWishlist');
+            wishlistAdd = $button.hasClass('addToWishlist'),
+            buyMoreAdd = $button.hasClass('buy-more') && !wishlistAdd;
             
         if (itemRequest.hasProductOptions == "true" && !modalClick) {
             $.modal($('#productOptions' + itemRequest.productId), modalProductOptionsOptions);
@@ -102,7 +144,15 @@ $(function(){
             	itemRequest['itemAttributes[' + $(element).attr('id') + ']'] = value;
             });
             
-            BLC.ajax({url: $form.attr('action'), 
+            if (buyMoreAdd) {
+                itemRequest.quantity = 5;
+            }
+
+            var cart2Action = $form.data('cart2Action') || $form.attr('data-cart2-action');
+            if (!cart2Action) {
+                cart2Action = $form.attr('action').replace('/cart/add', '/cart2/add');
+            }
+            BLC.ajax({url: buyMoreAdd ? cart2Action : $form.attr('action'), 
                     type: "POST",
                     dataType: "json",
                     data: itemRequest
@@ -126,7 +176,11 @@ $(function(){
                     } else {
                         $errorSpan.css('display', 'none'); 
                         $productOptionsSpan.css('display', 'none'); 
-                        updateHeaderCartItemsCount(data.cartItemCount);
+                        if (buyMoreAdd) {
+                            updateHeaderCart2ItemsCount(data.cart2ItemCount);
+                        } else {
+                            updateHeaderCartItemsCount(data.cartItemCount);
+                        }
                         
                         if (modalClick) {
                             $.modal.close();
@@ -138,6 +192,8 @@ $(function(){
                         
                         if (wishlistAdd) {
                             HC.showNotification(data.productName + "  has been added to your wishlist!");
+                        } else if (buyMoreAdd) {
+                            HC.showNotification(data.productName + "  has been added to cart2!", 2000);
                         } else {
                             HC.showNotification(data.productName + "  has been added to the cart!", 2000);
                         }

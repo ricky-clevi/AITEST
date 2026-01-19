@@ -376,10 +376,15 @@ header {
         float: right;
     }
     
-    #header_content #cart_info a:link, #header_content #cart_info a:visited {
-        color: white;
-        text-decoration: none;
-    }
+#header_content #cart_info a:link, #header_content #cart_info a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+#header_content #cart_info .cart2Link {
+    color: white;
+    font-weight: 600;
+}
     
     header #header_content #cart_info a.my-account {
         text-decoration: underline;
@@ -1897,6 +1902,11 @@ input[type="submit"].gray, a.gray-button, a.inCart {
     background-color: #BBAFAE;
 }
 
+input[type="submit"].buy-more, .addToCart.buy-more {
+    color: white;
+    background-color: #1E6FD9 !important;
+}
+
 /* Shared hover styles between all buttons */
 input[type="submit"].big:hover, a.big-button:hover, 
 input[type="submit"].medium:hover, a.medium-button:hover,
@@ -1914,6 +1924,10 @@ input[type="submit"].red:hover, a.red-button:hover, .addToCart:hover {
 
 input[type="submit"].gray:hover, a.gray-button:hover, a.inCart:hover {
     background-color: #9B8A87;
+}
+
+input[type="submit"].buy-more:hover, .addToCart.buy-more:hover {
+    background-color: #1559ad !important;
 }
 
 input[type="submit"].dark:hover, a.dark-button:hover, #featured_products .addToCart:hover {
