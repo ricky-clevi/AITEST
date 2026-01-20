@@ -16,9 +16,14 @@
     <description>My Company's eCommerce Website</description>
     <repositories>
         <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>public snapshots</id>
             <name>public snapshots</name>
-            <url>http://nexus.broadleafcommerce.org/nexus/content/repositories/snapshots/</url>
+            <url>https://nexus2.broadleafcommerce.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
     <build>

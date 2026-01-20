@@ -135,15 +135,45 @@
         <dependency>
             <groupId>org.broadleafcommerce</groupId>
             <artifactId>broadleaf-admin-module</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet.ext.servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.broadleafcommerce</groupId>
             <artifactId>broadleaf-contentmanagement-module</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet.ext.servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     
         <dependency>
             <groupId>org.broadleafcommerce</groupId>
             <artifactId>broadleaf-framework-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.restlet.jee</groupId>
+                    <artifactId>org.restlet.ext.servlet</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.broadleafcommerce</groupId>
