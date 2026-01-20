@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<solr sharedLib="lib" persistent="true">
+  <cores defaultCoreName="primary" adminPath="/admin/cores">
+    <core name="reindex" instanceDir="core0dir"/>
+    <core name="primary" instanceDir="core1dir"/>
+  </cores>
+</solr>

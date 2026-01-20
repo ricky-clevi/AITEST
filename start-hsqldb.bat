@@ -2,8 +2,8 @@
 setlocal
 
 rem HSQLDB 서버 시작 스크립트
-set HSQLDB_JAR="C:\Users\ryuso\.m2\repository\org\hsqldb\hsqldb\2.3.1\hsqldb-2.3.1.jar"
-set DB_PATH="C:\AITEST\hsqldb-data\broadleaf"
+set HSQLDB_JAR="%~dp0tomcat-9.0.104\lib\hsqldb-2.3.1.jar"
+set DB_PATH="%~dp0hsqldb-data\broadleaf"
 set DB_NAME=broadleaf
 
 echo HSQLDB 서버를 시작합니다...
