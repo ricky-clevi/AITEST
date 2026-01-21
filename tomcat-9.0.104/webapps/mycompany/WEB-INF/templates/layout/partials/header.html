@@ -25,12 +25,24 @@
 
             <a id="cartLink" class="modalcart" th:href="@{/cart}">
                 <img th:src="@{/img/shopping_cart.png}" alt="Shopping Cart Icon" />
-                &nbsp; 
+                &nbsp;
                 <span id="headerCartItemWordSingular_i18n" style="display: none;" th:text="#{home.item}" />
                 <span id="headerCartItemWordPlural_i18n" style="display: none;" th:text="#{home.items}" />
                 <span class="headerCartItemsCount" th:text="${cart.itemCount}" />
                 <span class="headerCartItemsCountWord" th:text="${cart.itemCount == 1} ? #{home.item} :  #{home.items}" />
             </a>
+            
+            <!-- Cart2 Display -->
+            <div id="cart2Info" class="headerCart2Info" style="display: none;">
+                <a id="cart2Link" th:href="@{/cart}">
+                    <img th:src="@{/img/shopping_cart.png}" alt="Shopping Cart 2 Icon" />
+                    &nbsp;
+                    <span id="headerCart2ItemWordSingular_i18n" style="display: none;" th:text="#{home.item}" />
+                    <span id="headerCart2ItemWordPlural_i18n" style="display: none;" th:text="#{home.items}" />
+                    <span class="headerCart2ItemsCount">0</span>
+                    <span class="headerCart2ItemsCountWord">items</span>
+                </a>
+            </div>
 
         </div>
 

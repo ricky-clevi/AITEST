@@ -27,16 +27,32 @@
     <div th:if="${checkInventory and !availableInventory}" class="out_of_stock">
         <a disabled="disabled" class="inCart">Out of Stock</a>
     </div>
+    
+    <!-- In Cart 버튼 (cart1용) -->
     <div class="in_cart" th:classappend="${!inCart}? ' hidden'" th:if="${#lists.isEmpty(product.productOptions)}">
         <a class="modalcart inCart" th:href="@{/cart}"><span th:text="#{product.inCart}">In Cart!</span></a>
     </div>
 
+    <!-- Buy Now 버튼 (첫 클릭: cart1에 추가, 버튼은 Buy More로 변경) -->
     <div class="add_to_cart" th:classappend="${inCart or !availableInventory}? ' hidden'">
-        <blc:form method="POST" th:action="@{/cart/add}">
+        <blc:form method="POST" th:action="@{/cart/add}" class="buyNowForm">
             <input type="hidden" name="productId" th:value="*{id}" />
             <input type="hidden" name="quantity" value="1" />
             <input type="hidden" name="hasProductOptions" th:value="*{!#lists.isEmpty(productOptions)}" />
-            <input type="submit" class="addToCart" th:value="#{product.buyNow}"/>
+            <input type="hidden" name="skuId" th:value="*{defaultSku.id}" />
+            <input type="submit" class="addToCart buyNowButton" th:value="#{product.buyNow}"
+                   th:data-product-id="*{id}" th:data-sku-id="*{defaultSku.id}"/>
+        </blc:form>
+    </div>
+
+    <!-- Buy More 버튼 (파란색, cart2에 5개씩 추가) -->
+    <div class="buy_more" th:classappend="${!inCart}? ' hidden'">
+        <blc:form method="POST" th:action="@{/cart/add2}" class="buyMoreForm">
+            <input type="hidden" name="productId" th:value="*{id}" />
+            <input type="hidden" name="skuId" th:value="*{defaultSku.id}" />
+            <input type="hidden" name="quantity" value="5" />
+            <input type="submit" class="addToCart buyMoreButton" value="Buy More"
+                   th:data-product-id="*{id}" th:data-sku-id="*{defaultSku.id}"/>
         </blc:form>
     </div>
 

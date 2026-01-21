@@ -16,9 +16,11 @@
 
 package com.mycompany.controller.cart;
 
-
+import com.mycompany.core.cart2.domain.OrderCart2;
+import com.mycompany.core.cart2.service.OrderCart2Service;
 import org.broadleafcommerce.core.catalog.domain.Product;
 import org.broadleafcommerce.core.inventory.service.InventoryUnavailableException;
+import org.broadleafcommerce.core.order.domain.Order;
 import org.broadleafcommerce.core.order.service.exception.AddToCartException;
 import org.broadleafcommerce.core.order.service.exception.ProductOptionValidationException;
 import org.broadleafcommerce.core.order.service.exception.RemoveFromCartException;
@@ -28,6 +30,7 @@ import org.broadleafcommerce.core.pricing.service.exception.PricingException;
 import org.broadleafcommerce.core.web.controller.cart.BroadleafCartController;
 import org.broadleafcommerce.core.web.order.CartState;
 import org.broadleafcommerce.core.web.order.model.AddToCartItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,6 +49,9 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/cart")
 public class CartController extends BroadleafCartController {
+    
+    @Autowired
+    private OrderCart2Service orderCart2Service;
     
     @Override
     @RequestMapping("")
@@ -162,6 +168,68 @@ public class CartController extends BroadleafCartController {
     public String removePromo(HttpServletRequest request, HttpServletResponse response, Model model,
             @RequestParam("offerCodeId") Long offerCodeId) throws IOException, PricingException {
         return super.removePromo(request, response, model, offerCodeId);
+    }
+    
+    /**
+     * Cart2에 상품 추가 (Buy More 버튼용)
+     * 한 번에 5개씩 추가
+     */
+    @RequestMapping(value = "/add2", produces = "application/json")
+    public @ResponseBody Map<String, Object> addToCart2(HttpServletRequest request, HttpServletResponse response, Model model,
+            @RequestParam("productId") Long productId,
+            @RequestParam("skuId") Long skuId,
+            @RequestParam(value = "quantity", defaultValue = "5") int quantity) throws IOException, PricingException {
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        
+        try {
+            // 현재 사용자 ID 가져오기 (임시로 1 사용)
+            Long customerId = 1L;
+            
+            // Cart2에 상품 추가
+            orderCart2Service.addItemToCart2(customerId, productId, skuId, quantity);
+            
+            // Cart2 정보 가져오기
+            OrderCart2 cart2 = orderCart2Service.getOrCreateCart2(customerId);
+            
+            Product product = catalogService.findProductById(productId);
+            
+            responseMap.put("productId", productId);
+            responseMap.put("productName", product != null ? product.getName() : "Unknown Product");
+            responseMap.put("quantityAdded", quantity);
+            responseMap.put("cart2ItemCount", String.valueOf(cart2.getItemCount()));
+            responseMap.put("cart2Id", cart2.getId());
+            responseMap.put("success", true);
+            
+        } catch (Exception e) {
+            responseMap.put("error", "Error adding to cart2: " + e.getMessage());
+            responseMap.put("success", false);
+        }
+        
+        return responseMap;
+    }
+    
+    /**
+     * Cart2 정보 조회
+     */
+    @RequestMapping(value = "/cart2", produces = "application/json")
+    public @ResponseBody Map<String, Object> getCart2(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Map<String, Object> responseMap = new HashMap<String, Object>();
+        
+        try {
+            Long customerId = 1L;
+            OrderCart2 cart2 = orderCart2Service.getOrCreateCart2(customerId);
+            
+            responseMap.put("cart2Id", cart2.getId());
+            responseMap.put("cart2ItemCount", cart2.getItemCount());
+            responseMap.put("cart2Total", cart2.getTotal());
+            responseMap.put("success", true);
+            
+        } catch (Exception e) {
+            responseMap.put("error", "Error getting cart2: " + e.getMessage());
+            responseMap.put("success", false);
+        }
+        
+        return responseMap;
     }
     
 }

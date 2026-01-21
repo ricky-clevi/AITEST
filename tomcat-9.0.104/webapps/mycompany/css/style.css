@@ -2956,3 +2956,45 @@ and (max-width : 480px) {
 .icon-filter{background-position:-408px -144px;}
 .icon-briefcase{background-position:-432px -144px;}
 .icon-fullscreen{background-position:-456px -144px;}
+
+
+/* =============================================================================
+   Buy More Button Styles (Blue)
+   ========================================================================== */
+
+.buy_more {
+    display: block;
+}
+
+.buyMoreButton {
+    color: white;
+    background-color: #007bff;
+    -webkit-transition: background-color 0.2s ease-in;  
+    -moz-transition: background-color 0.2s ease-in;  
+    -o-transition: background-color 0.2s ease-in;  
+    transition: background-color 0.2s ease-in;
+}
+
+.buyMoreButton:hover {
+    background-color: #0056b3;
+}
+
+/* Cart2 display styles */
+.headerCart2Info {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.headerCart2Info a {
+    color: white;
+    text-decoration: none;
+}
+
+.headerCart2Info a:hover {
+    text-decoration: underline;
+}
