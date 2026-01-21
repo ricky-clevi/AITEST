@@ -1,5 +1,9 @@
 @echo off
-set CATALINA_HOME=c:\work\ibk\bs5\AITEST\tomcat-9.0.104
-set CATALINA_BASE=c:\work\ibk\bs5\AITEST\tomcat-9.0.104
+REM Start Tomcat server
+
+echo Starting Tomcat...
 cd tomcat-9.0.104\bin
 call startup.bat
+
+echo Tomcat started. Press Ctrl+C to stop.
+pause

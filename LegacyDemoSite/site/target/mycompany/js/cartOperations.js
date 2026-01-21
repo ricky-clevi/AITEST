@@ -43,6 +43,25 @@ $(function(){
         $('.productActions' + productId).children('.add_to_'+orderType).removeClass('hidden');
         $('.productActions' + productId).children('.in_'+orderType).addClass('hidden');
     }
+    
+    // Shows the Buy More button (blue) after Buy Now is clicked
+    function showBuyMoreButton(productId) {
+        $('.productActions' + productId).children('.buy_more').removeClass('hidden');
+    }
+    
+    // Update header cart2 items count
+    function updateHeaderCart2ItemsCount(newCount) {
+        var singularItem = $('span#headerCartItemWordSingular_i18n').text();
+        var plurarlItem = $('span#headerCartItemWordPlural_i18n').text();
+
+        $('.headerCart2ItemsCount').html(newCount);
+        $('.headerCart2ItemsCountWord').html((newCount == 1) ? singularItem: plurarlItem);
+    }
+    
+    // Show cart2 info in header
+    function showCart2Info() {
+        $('#cart2Info').show();
+    }
 
     // Show the cart in a modal when any link with the class "modalcart" is clicked
     $('body').on('click', 'a.modalcart', function() {
@@ -77,7 +96,8 @@ $(function(){
         
         var itemRequest = BLC.serializeObject($form),
             modalClick = $button.parents('.simplemodal-wrap').length > 0,
-            wishlistAdd = $button.hasClass('addToWishlist');
+            wishlistAdd = $button.hasClass('addToWishlist'),
+            isBuyMore = $button.hasClass('buyMoreButton');
             
         if (itemRequest.hasProductOptions == "true" && !modalClick) {
             $.modal($('#productOptions' + itemRequest.productId), modalProductOptionsOptions);
@@ -102,7 +122,7 @@ $(function(){
             	itemRequest['itemAttributes[' + $(element).attr('id') + ']'] = value;
             });
             
-            BLC.ajax({url: $form.attr('action'), 
+            BLC.ajax({url: $form.attr('action'),
                     type: "POST",
                     dataType: "json",
                     data: itemRequest
@@ -124,22 +144,37 @@ $(function(){
                             HC.showNotification("Error adding to cart");
                         }
                     } else {
-                        $errorSpan.css('display', 'none'); 
-                        $productOptionsSpan.css('display', 'none'); 
-                        updateHeaderCartItemsCount(data.cartItemCount);
+                        $errorSpan.css('display', 'none');
+                        $productOptionsSpan.css('display', 'none');
                         
-                        if (modalClick) {
-                            $.modal.close();
-                        } else if (wishlistAdd) {
-                            showInCartButton(data.productId, 'wishlist');
+                        if (isBuyMore) {
+                            // Buy More 버튼 클릭: cart2에 추가
+                            updateHeaderCart2ItemsCount(data.cart2ItemCount);
+                            HC.showNotification(data.productName + "  has been added to cart2 (" + data.quantityAdded + " items)!", 2000);
                         } else {
-                            showInCartButton(data.productId, 'cart');
+                            // Buy Now 버튼 클릭: cart1에 추가 후 Buy More 버튼으로 변경
+                            updateHeaderCartItemsCount(data.cartItemCount);
+                            
+                            if (modalClick) {
+                                $.modal.close();
+                            } else if (wishlistAdd) {
+                                showInCartButton(data.productId, 'wishlist');
+                            } else {
+                                showInCartButton(data.productId, 'cart');
+                                // Buy More 버튼 표시
+                                showBuyMoreButton(data.productId);
+                            }
+                            
+                            if (wishlistAdd) {
+                                HC.showNotification(data.productName + "  has been added to your wishlist!");
+                            } else {
+                                HC.showNotification(data.productName + "  has been added to the cart!", 2000);
+                            }
                         }
                         
-                        if (wishlistAdd) {
-                            HC.showNotification(data.productName + "  has been added to your wishlist!");
-                        } else {
-                            HC.showNotification(data.productName + "  has been added to the cart!", 2000);
+                        // cart2가 생성되었으면 화면에 표시
+                        if (data.cart2Id) {
+                            showCart2Info();
                         }
                     }
                 }
