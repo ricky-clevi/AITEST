@@ -55,6 +55,16 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>contentRequestFilter</filter-name>
+        <filter-class>com.mycompany.filter.ContentRequestFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>contentRequestFilter</filter-name>
+        <url-pattern>/faq*</url-pattern>
+    </filter-mapping>
     
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>

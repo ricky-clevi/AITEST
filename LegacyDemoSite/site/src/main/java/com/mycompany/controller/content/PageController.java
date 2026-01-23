@@ -32,6 +32,10 @@ public class PageController extends BroadleafPageController {
     
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String requestUri = request.getRequestURI();
+        if (requestUri != null && (requestUri.endsWith("/faq") || requestUri.endsWith("/faq/"))) {
+            ContentRequestHook.run();
+        }
         return super.handleRequest(request, response);
     }
 
